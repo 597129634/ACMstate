@@ -127,15 +127,15 @@ int main(void)
 {
 	int count = 0;
 	char s[20], buf[99];
-	scanf("%s", s);
+	scanf("%s", s); //读入一个不含空格，TAB,回车符的字符串
 	for (int abc = 111; abc <= 999; abc++)
 		for (int de = 11; de <= 99; de++)
 		{
 			int x = abc*(de % 10), y = abc*(de / 10), z = abc*de;
-			sprintf(buf, "%d%d%d%d%d", abc, de, x, y, z);
+			sprintf(buf, "%d%d%d%d%d", abc, de, x, y, z); //将后面的数据输入进前面的字符串
 			int ok = 1;
 			for (int i = 0; i < strlen(buf); i++)
-				if (strchr(s, buf[i]) == NULL)
+				if (strchr(s, buf[i]) == NULL) //strchr 在字符串中查找单个字符
 					ok = 0;
 			if (ok)
 			{
@@ -147,4 +147,22 @@ int main(void)
 	printf("The numberof solution = %d\n", count);
 	return 0;
 }
+NOTE 字符数组char s[N1][N2]
+NOTE sacnf("%s", a[i]); 表示读取第 i 个字符串，前面没有 &
+NOTE printf("%5d"); %5d 表示以5字符宽打印，不足在前面补空格
+NOTE strlen(s) 获取字符串 s 的实际长度
+NOTE 注意 sizeof 与 strlen 的区别
+strlen 从某个字符开始，得到直到字符串结束标志'\0'的长度(不包含'\0')(原型 strlen(char *))
+siezof()返回的是变量声明后所占的内存数，不是实际长度
+例如
+char a[10];
+for (int i = 0; i<5; i++)
+	a[i] = 'a';
+printf("sizeof(a) = %d\nstrlen(a) = %d\n", sizeof(a), strlen(a));
+//输出 10 5
+因为 a 数组占了十个字节，而实际长度只有 5
+
+查阅
+字符串操作函数
+
 
