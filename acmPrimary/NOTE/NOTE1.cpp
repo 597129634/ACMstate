@@ -165,4 +165,177 @@ printf("sizeof(a) = %d\nstrlen(a) = %d\n", sizeof(a), strlen(a));
 查阅
 字符串操作函数
 
+补充内容
+1 一维数组的声明与使用
+初始化数组
+int power[N] = { 1,2,3,4... }；
+使用逗号分隔，花括号括起来
+NOTE 可以省略方括号中的数字，让编译器自动匹配数组大小
+int day[] = { 1,2,3,4 };
 
+2 多维数组
+二维数组初始化
+int day[N1][N2] = {
+	{1,2,3,4,5}, //一个数值列表代表一行
+	{2,3,4,5},
+	{4,5,6,7}
+};
+
+指针和数组
+数组名是数组首元素的地址
+a[n] == *(a + n);
+函数，数组和指针
+int fun(int *a);//声明
+NOTE 声明数组形参，以下 4 种声明等价
+int fun(int *a, int n);
+int fun(int *, int);
+int fun(int a[], int n);
+int fun(int[], int);
+注意，在函数定义中不能省略参数名，以下两种定义等价
+int fun(int *a, int n);
+int fun(int a[], int n);
+
+使用指针形参
+指针和多维数组
+函数和多维数组 （形参最多只能省略第一维的长度）
+注意多维数组动态传参要申请内存，具体方法如下
+使用malloc动态申请内存（切记最后要释放内存）
+方法一：利用二级指针申请一个二维数组
+int main()
+{
+	int **a;  //用二级指针动态申请二维数组    
+	int i, j;
+	int m, n;
+	printf("请输入行数\n");
+	scanf("%d", &m);
+	printf("请输入列数\n");
+	scanf("%d", &n);
+
+	/*************关键部分*********************/
+	a = (int**)malloc(sizeof(int*)*m); //先对行申请
+	for (i = 0; i<m; i++)
+		a[i] = (int*)malloc(sizeof(int)*n); //再对列申请
+	/*************申请结束****************************/
+	/****************重要提示*************************/
+	//不可以使用 a = (int **)malloc(sizeof(int)*m*n); 来申请，这样会失败
+
+	for (i = 0; i<m; i++)
+	{
+		for (j = 0; j<n; j++)
+		{
+			printf("%p\n", &a[i][j]);     //输出每个元素地址，每行的列与列之间的地址时连续的，行与行之间的地址不连续  
+		}
+	}
+	for (i = 0; i<m; i++)
+		free(a[i]);
+
+	free(a);
+	return 0;
+}
+//使用此方法，传递参数时使用二级指针即可 如下例，对二维数组每个元素加 3
+void sum(int N, int **a)   //函数定义
+{
+	for (int i = 0; i<N; i++)
+	{
+		for (int j = 0; j<N; j++)
+		{
+			a[i][j] += 3;
+		}
+	}
+
+	for (int i = 0; i<N; i++)
+	{
+		for (int j = 0; j<N; j++)
+			printf("%d ", a[i][j]);
+		printf("\n");
+	}
+
+}
+
+int main(void)
+{
+	freopen("array.txt", "r", stdin);
+	int n;
+	scanf("%d", &n);
+	printf("n = %d\n", n);
+
+
+	//int **a = (int **)malloc(sizeof(int)*n*n); 错误的声明
+	/*正确的声明*/
+	int **a = (int **)malloc(sizeof(int *)*n);
+	for (int i = 0; i<n; i++)
+		a[i] = (int *)malloc(sizeof(int)*n);
+
+	for (int i = 0; i<n; i++)
+	{
+		for (int j = 0; j<n; j++)
+			scanf("%d", &a[i][j]);
+	}
+
+	for (int i = 0; i<n; i++)
+	{
+		for (int j = 0; j<n; j++)
+			printf("%d ", a[i][j]);
+		printf("\n");
+	}
+
+	printf("\nstart function\n");
+
+	sum(n, a);
+   /*   //检验是否改变了原数组的内容
+	*  for (int i = 0; i<n; i++)
+	*   {
+	*	    for (int j = 0; j<n; j++)
+	*		    printf("%d ", a[i][j]);
+	*	    printf("\n");
+	*    }
+	*/
+
+	free(a); //释放内存
+	return 0;
+}
+
+
+方法二：用数组指针形式申请一个二维数组
+int main()
+{
+	int i, j;
+	//申请一个3行2列的整型数组    
+	int(*a)[2] = (int(*)[2])malloc(sizeof(int) * 3 * 2);
+	for (i = 0; i<3; i++)
+	{
+		for (j = 0; j<2; j++)
+		{
+			printf("%p\n", &a[i][j]);  //输出数组每个元素地址，每个元素的地址是连续的  
+		}
+	}
+
+	free(a);
+	return 0;
+}
+
+方法三：用一个单独的一维数组来模拟二维数组
+int main()
+{
+	int nrows, ncolumns;
+	int *Array;
+	int i, j;
+	printf("please input nrows&ncolumns:\n");
+	scanf("%d%d", &nrows, &ncolumns);
+	Array = (int *)malloc(nrows*ncolumns * sizeof(int));   //申请内存空间  
+	for (i = 0; i<nrows; i++)
+	{
+		for (j = 0; j<ncolumns; j++)
+		{
+			Array[i*ncolumns + j] = 1;
+			printf("%d ", Array[i*ncolumns + j]);   //用Array[i*ncolumns+j] 访问第i,j个成员  
+		}
+		printf("\n");
+	}
+	free(Array);
+	return 0;
+}
+
+
+
+字符串函数（相关定义在 string.h 头文件中）
