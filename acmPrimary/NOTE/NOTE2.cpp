@@ -212,3 +212,17 @@ int cmp(const void *a, const void *b)
 
 
 //假期学习如何查看栈，栈帧
+本章题目
+UVA 489
+UVA 133
+UVA 213
+UVA 512
+UVA 12412
+UVA 1589
+UVA 201
+UVA 220
+UVA 1590
+UVA 509
+UVA 12108
+UVA 1591
+UVA 815
