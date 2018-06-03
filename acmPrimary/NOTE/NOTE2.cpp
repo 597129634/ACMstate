@@ -190,3 +190,25 @@ int sum(int *begin, int *end)
 NOTE 把数组作指针传递给函数时，数组的内容是可修改的
 
 4.2.6 把函数作为函数的参数
+例题 4 - 1 古老的密码（UVa 1339）
+C语言的stdlib.h中有一个qsort的库函数，实现了快速排序。声明如下
+void qsort(void *base, size_t num, size_t size, int(*comparator)(const void *, const void *));
+void *base //待排序数组的其实地址
+size_t num //带排序数组的元素个数
+size_t size //每个元素大小
+int(*comparator)(const *void, const *void); //指向函数的指针
+//最后一个参数应当有如下形式:
+int cmp(const void *,const void *) {......}
+指向常数的万能指针 const void *,可以通过强制类型转化成任意类型指针
+//本例为整型数组，写成如下形式
+int cmp(const void *a, const void *b)
+{
+	return *(int *)a - *(int *)b;
+}
+//一般地，需要先把参数 a 和 b 转化成真实的类型，然后让 cmp 函数当
+// a<b,a>b,a==b 时返回负数，整数和 0
+
+4.3 递归
+
+
+//假期学习如何查看栈，栈帧
